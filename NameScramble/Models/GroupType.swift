@@ -7,3 +7,8 @@
 //
 
 import Foundation
+
+struct GroupType {
+    let name: String
+    let description: String
+}

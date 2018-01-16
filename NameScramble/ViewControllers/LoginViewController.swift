@@ -7,29 +7,44 @@
 //
 
 import UIKit
+import CloudKit
 
 class LoginViewController: UIViewController {
 
+    var cloudKitManager = CloudKitManager()
+    var user: User?
+    
+        // MARK: - IBOutlets
+    @IBOutlet weak var firstNameTextField: UITextField!
+    @IBOutlet weak var lastNameTextField: UITextField!
+ 
+        // MARK: - LifeCycles
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+            // MARK: - Fetch current user and if there is USER segue to next View
+        cloudKitManager.fetchCurrentUser { (user) in
+            DispatchQueue.main.async {
+                self.user = user
+                UserController.shared.loggedInUser = user
+                if let _ = user {
+                    self.performSegue(withIdentifier: Constants.loginViewToMainViewSegue, sender: nil)
+                }
+            }
+        }
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        // MARK: - IBActions
+    @IBAction func createAccountButtonTapped(_ sender: Any) {
+        guard let firstName = firstNameTextField.text, let lastName = lastNameTextField.text, !firstName.isEmpty, !lastName.isEmpty else { return }
+        UserController.shared.saveUser(firstName: firstName, lastName: lastName) { (user) in
+            if let _ = user {
+                DispatchQueue.main.async {
+                    self.performSegue(withIdentifier: Constants.loginViewToMainViewSegue, sender: nil)
+                }
+            } else {
+                print("Error Saving User to cloudkit. No User = nil")
+            }
+        }
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

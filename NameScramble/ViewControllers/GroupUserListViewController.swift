@@ -8,28 +8,56 @@
 
 import UIKit
 
-class GroupUserListViewController: UIViewController {
+class GroupUserListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
+        // MARK: - IBOutlets
+    @IBOutlet weak var groupCodeLabel: UILabel!
+    @IBOutlet weak var tableView: UITableView!
+    
+        // MARK: - Variables
+    
+        // MARK: - LifeCycles
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        tableView.delegate = self
+        tableView.dataSource = self
+        
+        updateView()
+        
+        guard let group = GroupController.shared.group else { return }
+        groupCodeLabel.text = group.codeGenerator
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+        // MARK: - TableView DataSource
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return UserController.shared.users.count
     }
-    */
-
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: Constants.groupUsersTableViewCellIdentifier, for: indexPath)
+        let user = UserController.shared.users[indexPath.row]
+        cell.textLabel?.text = "\(user.firstName) \(user.lastName)"
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            
+            tableView.deleteRows(at: [indexPath], with: .fade)
+        }
+    }
+    
+    // MARK: - Navigation
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+    }
+    
+    func updateView() {
+        guard let group = GroupController.shared.group else { return }
+        UserController.shared.fetchUsersWithGroupRef(group: group) { (users) in
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
 }

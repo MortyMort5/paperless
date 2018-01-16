@@ -8,28 +8,68 @@
 
 import UIKit
 
-class EnterGroupCodeViewController: UIViewController {
+class EnterGroupCodeViewController: UIViewController, UITextFieldDelegate {
 
+    @IBOutlet weak var firstCharTextField: UITextField!
+    @IBOutlet weak var secondCharTextField: UITextField!
+    @IBOutlet weak var thirdCharTextField: UITextField!
+    @IBOutlet weak var fourthCharTextField: UITextField!
+    @IBOutlet weak var fifthCharTextField: UITextField!
+    @IBOutlet weak var sixthCharTextField: UITextField!
+    @IBOutlet weak var seventhCharTextField: UITextField!
+    @IBOutlet weak var eightCharTextField: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+        firstCharTextField.delegate = self;
+        secondCharTextField.delegate = self;
+        thirdCharTextField.delegate = self;
+        fourthCharTextField.delegate = self;
+        fifthCharTextField.delegate = self;
+        sixthCharTextField.delegate = self;
+        seventhCharTextField.delegate = self;
+        eightCharTextField.delegate = self;
+        
+        firstCharTextField.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: UIControlEvents.editingChanged)
+        secondCharTextField.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: UIControlEvents.editingChanged)
+        thirdCharTextField.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: UIControlEvents.editingChanged)
+        fourthCharTextField.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: UIControlEvents.editingChanged)
+        fifthCharTextField.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: UIControlEvents.editingChanged)
+        sixthCharTextField.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: UIControlEvents.editingChanged)
+        seventhCharTextField.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: UIControlEvents.editingChanged)
+        eightCharTextField.addTarget(self, action: #selector(textFieldDidChange(textField:)), for: UIControlEvents.editingChanged)
+        
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    @IBAction func joinButtonTapped(_ sender: Any) {
+        guard let one = firstCharTextField.text,
+            let two = secondCharTextField.text,
+            let three = thirdCharTextField.text,
+            let four = fourthCharTextField.text,
+            let five = fifthCharTextField.text,
+            let six = sixthCharTextField.text,
+            let seven = seventhCharTextField.text,
+            let eight = eightCharTextField.text else { return }
+        
+        let enteredCode = "\(one)\(two)\(three)\(four)\(five)\(six)\(seven)\(eight)"
+        
+        GroupController.shared.addUserToGroup(withCode: enteredCode) {
+            print("Finished Completion Block")
+            DispatchQueue.main.async {
+                self.performSegue(withIdentifier: Constants.enterCodeViewToGroupUserViewSegue, sender: nil)
+            }
+        }
+        
     }
-    */
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        print("TextField should return method called")
+        textField.resignFirstResponder();
+        return true;
+    }
+    
+    @objc func textFieldDidChange(textField: UITextField) {
+        print("lskdjfsd")
+    }
 
 }
