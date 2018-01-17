@@ -16,19 +16,22 @@ class User {
     let appleUserRef: CKReference
     var groupRef: CKReference?
     var friends: [CKReference]?
+    var randomFriendSelected: String
     
-    init(firstName: String, lastName: String, appleUserRef: CKReference, uuid: String) {
+    init(firstName: String, lastName: String, appleUserRef: CKReference, uuid: String, randomFriendSelected: String) {
         self.firstName = firstName
         self.lastName = lastName
         self.appleUserRef = appleUserRef
         self.uuid = uuid
+        self.randomFriendSelected = randomFriendSelected
     }
     
     init?(record: CKRecord) {
         guard let firstName = record[Constants.firstNameKey] as? String,
             let lastName = record[Constants.lastNameKey] as? String,
             let appleUserRef = record[Constants.appleUserRefKey] as? CKReference,
-            let uuid = record[Constants.uuidKey] as? String else { return nil }
+            let uuid = record[Constants.uuidKey] as? String,
+            let randomFriendSelected = record[Constants.randomFriendSelectedKey] as? String else { return nil }
         self.firstName = firstName
         self.lastName = lastName
         self.groupRef = record[Constants.groupRefKey] as? CKReference
@@ -36,6 +39,7 @@ class User {
         self.recordID = record.recordID
         self.appleUserRef = appleUserRef
         self.uuid = uuid
+        self.randomFriendSelected = randomFriendSelected
     }
 }
 
@@ -49,5 +53,6 @@ extension CKRecord {
         self.setValue(user.appleUserRef, forKey: Constants.appleUserRefKey)
         self.setValue(user.uuid, forKey: Constants.uuidKey)
         self.setValue(user.friends, forKey: Constants.friendsKey)
+        self.setValue(user.randomFriendSelected, forKey: Constants.randomFriendSelectedKey)
     }
 }

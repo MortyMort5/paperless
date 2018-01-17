@@ -28,6 +28,10 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         collectionView.dataSource = self
         collectionView.delegate = self
         setUpGroupTypes()
+        guard let groupRef = UserController.shared.loggedInUser?.groupRef else { return }
+        GroupController.shared.fetchUsersWithGroupRef(groupRef: groupRef) { (users) in
+            print("lajdskhf")
+        }
     }
     
     func setUpGroupTypes() {
@@ -46,6 +50,10 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         /*
          Segues to a view where the user can enter group code.
          */
+    }
+    
+    @IBAction func scrambleButtonTapped(_ sender: Any) {
+        let users = GroupController.shared.scrambleUsers()
     }
     
     @IBAction func userSelectedGroupButtonTapped(_ sender: Any) {

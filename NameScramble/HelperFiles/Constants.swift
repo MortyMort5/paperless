@@ -26,6 +26,7 @@ struct Constants {
     static let uuidKey = "uuid"
     static let groupRefKey = "groupRef"
     static let friendsKey = "friends"
+    static let randomFriendSelectedKey = "randomFriendSelected"
     
     // Group
     static let group = "Group"

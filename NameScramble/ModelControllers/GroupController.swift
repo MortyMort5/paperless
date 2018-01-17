@@ -8,11 +8,11 @@
 
 import Foundation
 import CloudKit
+import GameplayKit
 
 class GroupController {
     
     static let shared = GroupController()
-    var loggedInUser: User? = UserController.shared.loggedInUser
     var cloudKitManager = CloudKitManager()
     var group: Group?
     var users: [User] = []
@@ -31,12 +31,12 @@ class GroupController {
             guard let savedRecord = savedRecord else { completion(); return }
             let groupRecordID = savedRecord.recordID
             let groupRef = CKReference(recordID: groupRecordID, action: .none)
-            self.loggedInUser?.groupRef = groupRef
+            UserController.shared.loggedInUser?.groupRef = groupRef
             let newGroup = Group(record: savedRecord)
             guard let group = newGroup else { completion(); return }
             self.group = group
             
-            guard let user = self.loggedInUser else { completion(); return }
+            guard let user = UserController.shared.loggedInUser else { completion(); return }
             let userRecord = CKRecord(user: user)
             let operation = CKModifyRecordsOperation(recordsToSave: [userRecord], recordIDsToDelete: nil)
             operation.completionBlock = {
@@ -60,8 +60,8 @@ class GroupController {
             let group = records.flatMap({ Group(record: $0) })
             self.group = group.first
             let groupRef = CKReference(recordID: recordID, action: .none)
-            self.loggedInUser?.groupRef = groupRef
-            guard let user = self.loggedInUser else { completion(); return }
+            UserController.shared.loggedInUser?.groupRef = groupRef
+            guard let user = UserController.shared.loggedInUser else { completion(); return }
             let userRecord = CKRecord(user: user)
             let operation = CKModifyRecordsOperation(recordsToSave: [userRecord], recordIDsToDelete: nil)
             operation.completionBlock = {
@@ -70,6 +70,43 @@ class GroupController {
             operation.savePolicy = .changedKeys
             self.cloudKitManager.publicDatabase.add(operation)
             completion()
+        }
+    }
+    
+    func fetchUsersWithGroup(group: Group, completion: @escaping([User]) -> Void) {
+        guard let groupRecordID = group.recordID else { completion([]); return }
+        let groupRef = CKReference(recordID: groupRecordID, action: .none)
+        let predicate = NSPredicate(format: "\(Constants.groupRefKey) == %@", groupRef)
+        let query = CKQuery(recordType: Constants.user, predicate: predicate)
+        cloudKitManager.publicDatabase.perform(query, inZoneWith: nil) { (records, error) in
+            if let error = error {
+                print("Error with fetching users for this group: \(error.localizedDescription)")
+                completion([])
+                return
+            }
+            guard let records = records else { completion([]);  return }
+            let users = records.flatMap({ User(record: $0) })
+            print("Successfully fetched users")
+            self.group?.users = users
+            completion(users)
+        }
+    }
+    
+    func fetchUsersWithGroupRef(groupRef: CKReference, completion: @escaping([User]) -> Void) {
+        let predicate = NSPredicate(format: "\(Constants.groupRefKey) == %@", groupRef)
+        let query = CKQuery(recordType: Constants.user, predicate: predicate)
+        cloudKitManager.publicDatabase.perform(query, inZoneWith: nil) { (records, error) in
+            if let error = error {
+                print("Error with fetching users for this group: \(error.localizedDescription)")
+                completion([])
+                return
+            }
+            guard let records = records else { completion([]);  return }
+            let users = records.flatMap({ User(record: $0) })
+            print("Successfully fetched users")
+            self.group?.users = users
+            self.users = users
+            completion(users)
         }
     }
     
@@ -84,5 +121,17 @@ class GroupController {
             randomString += NSString(characters: &nextChar, length: 1) as String
         }
         return randomString
+    }
+    
+    func scrambleUsers() -> [User] {
+        guard let scrambledUsers: [User] = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: self.users) as? [User] else { return [] }
+        var newArr: [User] = []
+        for user in self.users {
+            for scrambledUser in scrambledUsers {
+                user.randomFriendSelected = "\(scrambledUser.firstName)\(scrambledUser.lastName)"
+                newArr.append(user)
+            }
+        }
+        return newArr
     }
 }

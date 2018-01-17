@@ -21,28 +21,27 @@ class GroupUserListViewController: UIViewController, UITableViewDataSource, UITa
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
-        
         updateView()
-        
-        guard let group = GroupController.shared.group else { return }
-        groupCodeLabel.text = group.codeGenerator
     }
     
-        // MARK: - TableView DataSource
+    @IBAction func scrambleNamesButtonTapped(_ sender: Any) {
+        
+    }
+    
+    // MARK: - TableView DataSource
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return UserController.shared.users.count
+        return GroupController.shared.users.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: Constants.groupUsersTableViewCellIdentifier, for: indexPath)
-        let user = UserController.shared.users[indexPath.row]
+        let user = GroupController.shared.users[indexPath.row]
         cell.textLabel?.text = "\(user.firstName) \(user.lastName)"
         return cell
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
@@ -54,7 +53,8 @@ class GroupUserListViewController: UIViewController, UITableViewDataSource, UITa
     
     func updateView() {
         guard let group = GroupController.shared.group else { return }
-        UserController.shared.fetchUsersWithGroupRef(group: group) { (users) in
+        groupCodeLabel.text = group.codeGenerator
+        GroupController.shared.fetchUsersWithGroup(group: group) { (users) in
             DispatchQueue.main.async {
                 self.tableView.reloadData()
             }
