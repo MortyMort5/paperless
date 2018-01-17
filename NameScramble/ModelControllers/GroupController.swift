@@ -123,14 +123,27 @@ class GroupController {
         return randomString
     }
     
+    func scrambleUsersAndSyncWithCloud(completion: @escaping() -> Void) {
+        let scrambledUsers = self.scrambleUsers()
+        let records = scrambledUsers.flatMap({ CKRecord(user: $0) })
+        let operation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)
+        operation.completionBlock = {
+            print("Saved modified Users Successfully")
+            completion()
+        }
+        operation.savePolicy = .changedKeys
+        self.cloudKitManager.publicDatabase.add(operation)
+    }
+    
     func scrambleUsers() -> [User] {
-        guard let scrambledUsers: [User] = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: self.users) as? [User] else { return [] }
+        guard let scrambledUsersOne: [User] = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: self.users) as? [User] else { return [] }
+        guard let scrambledUsersTwo: [User] = GKRandomSource.sharedRandom().arrayByShufflingObjects(in: scrambledUsersOne) as? [User] else { return [] }
         var newArr: [User] = []
+        var index = 0
         for user in self.users {
-            for scrambledUser in scrambledUsers {
-                user.randomFriendSelected = "\(scrambledUser.firstName)\(scrambledUser.lastName)"
-                newArr.append(user)
-            }
+            user.randomFriendSelected = "\(scrambledUsersTwo[index].firstName) \(scrambledUsersTwo[index].lastName)"
+            newArr.append(user)
+            index = index + 1
         }
         return newArr
     }

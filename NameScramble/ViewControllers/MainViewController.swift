@@ -53,7 +53,7 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     @IBAction func scrambleButtonTapped(_ sender: Any) {
-        let users = GroupController.shared.scrambleUsers()
+        
     }
     
     @IBAction func userSelectedGroupButtonTapped(_ sender: Any) {

@@ -25,7 +25,9 @@ class GroupUserListViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     @IBAction func scrambleNamesButtonTapped(_ sender: Any) {
-        
+        GroupController.shared.scrambleUsersAndSyncWithCloud {
+            
+        }
     }
     
     // MARK: - TableView DataSource
