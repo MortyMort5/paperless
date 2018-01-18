@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		8108598520100AE900C51E20 /* StartUpViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8108598420100AE900C51E20 /* StartUpViewController.swift */; };
 		81584B592004372500B7428D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81584B582004372500B7428D /* AppDelegate.swift */; };
 		81584B5E2004372500B7428D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 81584B5C2004372500B7428D /* Main.storyboard */; };
 		81584B632004372500B7428D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 81584B622004372500B7428D /* Assets.xcassets */; };
@@ -27,6 +28,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		8108598420100AE900C51E20 /* StartUpViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StartUpViewController.swift; sourceTree = "<group>"; };
 		81584B552004372500B7428D /* NameScramble.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NameScramble.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		81584B582004372500B7428D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		81584B5D2004372500B7428D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 		81584B70200438B500B7428D /* ViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				8108598420100AE900C51E20 /* StartUpViewController.swift */,
 				819C3C302005999500C64B67 /* LoginViewController.swift */,
 				819C3C2A20058F3600C64B67 /* MainViewController.swift */,
 				819C3C342006CC7F00C64B67 /* GroupUserListViewController.swift */,
@@ -201,6 +204,9 @@
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
 						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
 							com.apple.Push = {
 								enabled = 1;
 							};
@@ -259,6 +265,7 @@
 				819C3C3F2006DC3F00C64B67 /* Constants.swift in Sources */,
 				81CCF97F200962F700269596 /* GroupType.swift in Sources */,
 				819C3C2B20058F3600C64B67 /* MainViewController.swift in Sources */,
+				8108598520100AE900C51E20 /* StartUpViewController.swift in Sources */,
 				819C3C352006CC7F00C64B67 /* GroupUserListViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

@@ -9,6 +9,7 @@
 import UIKit
 import CloudKit
 import CoreData
+import UserNotifications
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -28,7 +29,35 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             UserController.shared.appleUserRecordID = recordID
         }
         
+        let unc = UNUserNotificationCenter.current()
+        
+        unc.requestAuthorization(options: [.alert, .badge, .sound]) { (success, error) in
+            if let error = error {
+                NSLog("Error requesting authorization for notifications: \(error)")
+                return
+            }
+        }
+        UIApplication.shared.registerForRemoteNotifications()
         return true
+    }
+    
+    func application(_ application: UIApplication, didReceiveRemoteNotification userInfo: [AnyHashable : Any], fetchCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
+        
+        let cloudKitNotification = CKNotification(fromRemoteNotificationDictionary: userInfo)
+        let alertbody = cloudKitNotification.alertBody
+        if cloudKitNotification.subscriptionID == Constants.userUpdate {
+            print("User was modified!!!!!!")
+        }
+        completionHandler(.newData)
+    }
+    
+    func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
+        print("Registered for noticications")
+        
+    }
+    
+    func application(_ application: UIApplication, didFailToRegisterForRemoteNotificationsWithError error: Error) {
+        print("Failed to Register for noticications")
     }
 
     func applicationWillResignActive(_ application: UIApplication) {

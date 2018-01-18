@@ -14,7 +14,7 @@ class UserController {
     static let shared = UserController()
     var appleUserRecordID: CKRecordID?
     var cloudKitManager = CloudKitManager()
-    var loggedInUser: User? 
+    var loggedInUser: User?
     
     func saveUser(firstName: String, lastName: String, completion: @escaping(User?) -> Void) {
         guard let recordID = appleUserRecordID else { completion(nil); return }

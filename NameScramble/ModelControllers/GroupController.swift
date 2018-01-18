@@ -14,6 +14,7 @@ class GroupController {
     
     static let shared = GroupController()
     var cloudKitManager = CloudKitManager()
+    let userUpdateNotificationName = Notification.Name(Constants.userUpdateNotification)
     var group: Group?
     var users: [User] = []
     
@@ -44,6 +45,23 @@ class GroupController {
             }
             operation.savePolicy = .changedKeys
             self.cloudKitManager.publicDatabase.add(operation)
+            completion()
+        }
+    }
+    
+    func fetchGroupWithGroupRef(groupRef: CKReference, completion: @escaping() -> Void) {
+        let predicate = NSPredicate(format: "\(Constants.recordIDKey) == %@", groupRef)
+        let query = CKQuery(recordType: Constants.group, predicate: predicate)
+        cloudKitManager.publicDatabase.perform(query, inZoneWith: nil) { (records, error) in
+            if let error = error {
+                print("Error fetching Group with groupRef. Error : \(error.localizedDescription)")
+                completion()
+                return
+            }
+            guard let records = records else { completion(); return }
+            let group = records.flatMap({ Group(record: $0) })
+            self.group = group.first
+            print("Fetched Group Successfully")
             completion()
         }
     }
@@ -88,6 +106,7 @@ class GroupController {
             let users = records.flatMap({ User(record: $0) })
             print("Successfully fetched users")
             self.group?.users = users
+            self.users = users
             completion(users)
         }
     }

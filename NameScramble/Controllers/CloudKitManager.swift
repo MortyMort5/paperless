@@ -411,68 +411,21 @@ class CloudKitManager {
     
     // MARK: - Subscriptions
     
-//    func subscribeToStudentReadyCheck(topic: Topic) {
-//        guard let topicID = topic.recordID else { return }
-//        let topifRef = CKReference(recordID: topicID, action: .none)
-//        let notificationInfo = CKNotificationInfo()
-//        let topicPredicate = NSPredicate(format: "topicReferences CONTAINS %@", topifRef)
-//        notificationInfo.shouldSendContentAvailable = true
-//        let predicates = NSCompoundPredicate(andPredicateWithSubpredicates: [topicPredicate])
-//
-//
-//        let subscription = CKQuerySubscription(recordType: "User", predicate: predicates, options: .firesOnRecordUpdate)
-//        subscription.notificationInfo = notificationInfo
-//
-//        subscribe("User", predicate: predicates, subscriptionID: "studentReadyCheck", contentAvailable: true, options: .firesOnRecordUpdate) { (_, _) in
-//
-//        }
-//
-//    }
-//
-//    func subscribeToStudentQuestion(topic: Topic) {
-//        let notificationInfo = CKNotificationInfo()
-//        guard let topicID = topic.recordID else { return }
-//        let predicate = NSPredicate(format: "topicReference == %@", topicID)
-//        notificationInfo.shouldSendContentAvailable = true
-//
-//        let subscription = CKQuerySubscription(recordType: "Question", predicate: predicate, options: .firesOnRecordCreation)
-//        subscription.notificationInfo = notificationInfo
-//
-//        subscribe("Question", predicate: predicate, subscriptionID: "NewQuestion", contentAvailable: true, options: .firesOnRecordCreation) { (_, _) in
-//
-//        }
-//        subscribe("Question", predicate: predicate, subscriptionID: "DeletedQuestion", contentAvailable: true, options: .firesOnRecordDeletion) { (_, _) in
-//
-//        }
-//
-//    }
-//
-//    func subscribeToQuestionVotesIn(topic: Topic) {
-//
-//        guard let topicID = topic.recordID else { return }
-//        let questionPredicate = NSPredicate(value: true)
-//        let topicRefPredicate = NSPredicate(format: "topicReference == %@", topicID)
-//        let predicates = NSCompoundPredicate(andPredicateWithSubpredicates: [questionPredicate, topicRefPredicate])
-//
-//        subscribe("Question", predicate: predicates, subscriptionID: "QuestionVote", contentAvailable: true, options: .firesOnRecordUpdate) { (_, _) in
-//
-//        }
-//    }
-    
-    
-    
-//    func subscribeToTopicBool(topic: Topic) {
-//        let notificationInfo = CKNotificationInfo()
-//
-//        guard let topicID = topic.recordID else { return }
-//        let topicIDPredicate = NSPredicate(format: "recordID == %@", topicID)
-//        let predicates = NSCompoundPredicate(andPredicateWithSubpredicates: [topicIDPredicate])
-//        notificationInfo.shouldSendContentAvailable = true
-//        let subscription = CKQuerySubscription(recordType: "Topic", predicate: predicates, options: .firesOnRecordUpdate)
-//        subscription.notificationInfo = notificationInfo
-//
-//        subscribe("Topic", predicate: predicates, subscriptionID: "Topic", contentAvailable: true, options: .firesOnRecordUpdate) { (_, _) in
-//
-//        }
-//    }
+    func subscribeToUserUpdate(group: Group) {
+        guard let recordID = group.recordID else { return }
+        let ref = CKReference(recordID: recordID, action: .none)
+        let notificationInfo = CKNotificationInfo()
+        let userPredicate = NSPredicate(value: true)
+        let groupPredicate = NSPredicate(format: "groupRef == %@", ref)
+        let predicates = NSCompoundPredicate(andPredicateWithSubpredicates: [userPredicate, groupPredicate])
+        let subscription = CKQuerySubscription(recordType: Constants.user, predicate: predicates, options: .firesOnRecordUpdate)
+        subscription.notificationInfo = notificationInfo
+        
+        publicDatabase.save(subscription) { (subscription, error) in
+            if let error = error {
+                print("Error subscription. Error \(error.localizedDescription)")
+            }
+        }
+
+    }
 }

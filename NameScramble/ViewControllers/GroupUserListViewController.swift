@@ -13,8 +13,10 @@ class GroupUserListViewController: UIViewController, UITableViewDataSource, UITa
         // MARK: - IBOutlets
     @IBOutlet weak var groupCodeLabel: UILabel!
     @IBOutlet weak var tableView: UITableView!
-    
-        // MARK: - Variables
+    @IBOutlet weak var selectedFriendView: UIView!
+    @IBOutlet weak var selectedFriendLabel: UILabel!
+    let backgroundView = UIView()
+    let cloudKitManager = CloudKitManager()
     
         // MARK: - LifeCycles
     override func viewDidLoad() {
@@ -22,6 +24,7 @@ class GroupUserListViewController: UIViewController, UITableViewDataSource, UITa
         tableView.delegate = self
         tableView.dataSource = self
         updateView()
+        prepView()
     }
     
     @IBAction func scrambleNamesButtonTapped(_ sender: Any) {
@@ -54,6 +57,7 @@ class GroupUserListViewController: UIViewController, UITableViewDataSource, UITa
     }
     
     func updateView() {
+        NotificationCenter.default.addObserver(self, selector: #selector(fetchUpdatedUsers), name: GroupController.shared.userUpdateNotificationName, object: nil)
         guard let group = GroupController.shared.group else { return }
         groupCodeLabel.text = group.codeGenerator
         GroupController.shared.fetchUsersWithGroup(group: group) { (users) in
@@ -61,5 +65,34 @@ class GroupUserListViewController: UIViewController, UITableViewDataSource, UITa
                 self.tableView.reloadData()
             }
         }
+    }
+    
+    func prepView() {
+        guard let group = GroupController.shared.group else { return }
+        cloudKitManager.subscribeToUserUpdate(group: group)
+    }
+    
+    @objc func fetchUpdatedUsers() {
+        guard let user = UserController.shared.loggedInUser, let groupRef = user.groupRef else { return }
+        GroupController.shared.fetchUsersWithGroupRef(groupRef: groupRef) { (users) in
+            DispatchQueue.main.async {
+                self.selectedFriendLabel.text = user.randomFriendSelected
+                self.updateSelectedFriendView()
+            }
+        }
+    }
+    
+    func updateSelectedFriendView() {
+        backgroundView.frame = view.bounds
+        backgroundView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        view.addSubview(backgroundView)
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissSubViews))
+        backgroundView.addGestureRecognizer(tap)
+        self.view.bringSubview(toFront: selectedFriendView) 
+    }
+    
+    @objc func dismissSubViews() {
+        self.view.sendSubview(toBack: selectedFriendView)
+        self.backgroundView.removeFromSuperview()
     }
 }

@@ -28,11 +28,9 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         collectionView.dataSource = self
         collectionView.delegate = self
         setUpGroupTypes()
-        guard let groupRef = UserController.shared.loggedInUser?.groupRef else { return }
-        GroupController.shared.fetchUsersWithGroupRef(groupRef: groupRef) { (users) in
-            print("lajdskhf")
-        }
     }
+    
+    
     
     func setUpGroupTypes() {
         let nameScrabler = GroupType(name: "Name Scrambler", description: "Everyone's names will be scrambled and one name will appear on each users device.")
@@ -53,7 +51,9 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
     }
     
     @IBAction func scrambleButtonTapped(_ sender: Any) {
-        
+        GroupController.shared.scrambleUsersAndSyncWithCloud {
+            print("Scrambled and saved")
+        }
     }
     
     @IBAction func userSelectedGroupButtonTapped(_ sender: Any) {

@@ -59,7 +59,6 @@ class EnterGroupCodeViewController: UIViewController, UITextFieldDelegate {
                 self.performSegue(withIdentifier: Constants.enterCodeViewToGroupUserViewSegue, sender: nil)
             }
         }
-        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {

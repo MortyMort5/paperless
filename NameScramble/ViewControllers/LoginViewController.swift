@@ -10,9 +10,6 @@ import UIKit
 import CloudKit
 
 class LoginViewController: UIViewController {
-
-    var cloudKitManager = CloudKitManager()
-    var user: User?
     
         // MARK: - IBOutlets
     @IBOutlet weak var firstNameTextField: UITextField!
@@ -21,17 +18,6 @@ class LoginViewController: UIViewController {
         // MARK: - LifeCycles
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-            // MARK: - Fetch current user and if there is USER segue to next View
-        cloudKitManager.fetchCurrentUser { (user) in
-            DispatchQueue.main.async {
-                self.user = user
-                UserController.shared.loggedInUser = user
-                if let _ = user {
-                    self.performSegue(withIdentifier: Constants.loginViewToMainViewSegue, sender: nil)
-                }
-            }
-        }
     }
 
         // MARK: - IBActions

@@ -17,6 +17,9 @@ struct Constants {
     static let loginViewToMainViewSegue = "toMainViewSegue"
     static let mainViewToGroupUserViewSegue = "toGroupUserSegue"
     static let enterCodeViewToGroupUserViewSegue = "codeToUserListSegue"
+    static let startUpViewToLoginViewSegue = "toLoginSegue"
+    static let startUpViewToMainViewSegue = "alreadyUserSegue"
+    static let startUpViewToGroupUserListViewSegue = "alreadyInGroupSegue"
     
     // User
     static let user = "User"
@@ -31,7 +34,13 @@ struct Constants {
     // Group
     static let group = "Group"
     static let codeGeneratorKey = "codeGenerator"
+    static let recordIDKey = "recordID"
+    
+    // SubscriptionID
+    static let userUpdate = "userUpdate"
 
+    // Notification Name
+    static let userUpdateNotification = "userUpdateNotification"
     
 }
 
