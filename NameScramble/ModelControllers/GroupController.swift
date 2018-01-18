@@ -41,6 +41,7 @@ class GroupController {
             let userRecord = CKRecord(user: user)
             let operation = CKModifyRecordsOperation(recordsToSave: [userRecord], recordIDsToDelete: nil)
             operation.completionBlock = {
+                print("Successfully saved user after creating new Group")
                 completion()
             }
             operation.savePolicy = .changedKeys
@@ -83,6 +84,7 @@ class GroupController {
             let userRecord = CKRecord(user: user)
             let operation = CKModifyRecordsOperation(recordsToSave: [userRecord], recordIDsToDelete: nil)
             operation.completionBlock = {
+                print("Successfully added user to group")
                 completion()
             }
             operation.savePolicy = .changedKeys
@@ -143,6 +145,10 @@ class GroupController {
     }
     
     func scrambleUsersAndSyncWithCloud(completion: @escaping() -> Void) {
+        if self.users.count <= 1 {
+            completion()
+            return
+        }
         let scrambledUsers = self.scrambleUsers()
         let records = scrambledUsers.flatMap({ CKRecord(user: $0) })
         let operation = CKModifyRecordsOperation(recordsToSave: records, recordIDsToDelete: nil)

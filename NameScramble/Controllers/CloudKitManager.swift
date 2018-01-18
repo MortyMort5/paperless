@@ -413,19 +413,20 @@ class CloudKitManager {
     
     func subscribeToUserUpdate(group: Group) {
         guard let recordID = group.recordID else { return }
-        let ref = CKReference(recordID: recordID, action: .none)
         let notificationInfo = CKNotificationInfo()
-        let userPredicate = NSPredicate(value: true)
-        let groupPredicate = NSPredicate(format: "groupRef == %@", ref)
-        let predicates = NSCompoundPredicate(andPredicateWithSubpredicates: [userPredicate, groupPredicate])
-        let subscription = CKQuerySubscription(recordType: Constants.user, predicate: predicates, options: .firesOnRecordUpdate)
+        let predicate = NSPredicate(format: "groupRef == %@", recordID)
+        let subscription = CKQuerySubscription(recordType: "User", predicate: predicate, options: .firesOnRecordUpdate)
         subscription.notificationInfo = notificationInfo
         
-        publicDatabase.save(subscription) { (subscription, error) in
+        subscribe("User", predicate: predicate, subscriptionID: "NewUserAddedToGroup", contentAvailable: true, options: .firesOnRecordUpdate) { (_, error) in
             if let error = error {
-                print("Error subscription. Error \(error.localizedDescription)")
+                print("Error with NewUserAddedToGroup Subscription. Error : \(error.localizedDescription)")
             }
         }
-
+        subscribe("User", predicate: predicate, subscriptionID: "UserLeftGroup", contentAvailable: true, options: .firesOnRecordUpdate) { (_, error) in
+            if let error = error {
+                print("Error with UserLeftGroup Subscription. Error : \(error.localizedDescription)")
+            }
+        }
     }
 }

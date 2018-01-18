@@ -8,7 +8,7 @@
 
 import UIKit
 
-class GroupUserListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class GroupUserListViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, UINavigationControllerDelegate {
 
         // MARK: - IBOutlets
     @IBOutlet weak var groupCodeLabel: UILabel!
@@ -25,6 +25,16 @@ class GroupUserListViewController: UIViewController, UITableViewDataSource, UITa
         tableView.dataSource = self
         updateView()
         prepView()
+    }
+    
+    @IBAction func leaveGroupButtonTapped(_ sender: Any) {
+        UserController.shared.leaveGroup {
+            DispatchQueue.main.async {
+                if let vc = self.storyboard?.instantiateViewController(withIdentifier: "MainView") {
+                    self.navigationController?.pushViewController(vc, animated: true)
+                }
+            }
+        }
     }
     
     @IBAction func scrambleNamesButtonTapped(_ sender: Any) {

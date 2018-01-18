@@ -50,12 +50,6 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
          */
     }
     
-    @IBAction func scrambleButtonTapped(_ sender: Any) {
-        GroupController.shared.scrambleUsersAndSyncWithCloud {
-            print("Scrambled and saved")
-        }
-    }
-    
     @IBAction func userSelectedGroupButtonTapped(_ sender: Any) {
         /*
          Creating a group
@@ -63,18 +57,24 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
          */
         
         GroupController.shared.createGroup(name: "New Group") {
-            DispatchQueue.main.async {
-                self.performSegue(withIdentifier: Constants.mainViewToGroupUserViewSegue, sender: nil)
-            }
+            UserController.shared.fetchFriendsForUser(completion: { (users) in
+                DispatchQueue.main.async {
+                    if users.count != 0 {
+                        self.performSegue(withIdentifier: Constants.mainViewToFriendViewSegue, sender: nil)
+                    } else {
+                        self.performSegue(withIdentifier: Constants.mainViewToGroupUserViewSegue, sender: nil)
+                    }
+                }
+            })
         }
     }
     
         // MARK: - Navigation
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == Constants.mainViewToGroupUserViewSegue {
-            guard let vc = segue.destination as? GroupUserListViewController else { return }
-            
-        }
+//        if segue.identifier == Constants.mainViewToGroupUserViewSegue {
+//            guard let vc = segue.destination as? GroupUserListViewController else { return }
+//
+//        }
     }
 
         // MARK: - CollectionView DataSource
@@ -108,7 +108,6 @@ class MainViewController: UIViewController, UICollectionViewDelegate, UICollecti
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.dismissSubViews))
         backgroundView.addGestureRecognizer(tap)
         self.view.bringSubview(toFront: cardView)
-        
     }
     
     @objc func dismissSubViews() {

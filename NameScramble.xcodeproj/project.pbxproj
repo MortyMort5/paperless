@@ -25,6 +25,7 @@
 		81DAD96520055E8300C8347E /* GroupController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DAD96420055E8300C8347E /* GroupController.swift */; };
 		81DAD968200562FB00C8347E /* CloudKitManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81DAD967200562FB00C8347E /* CloudKitManager.swift */; };
 		81DAD96C2005883B00C8347E /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 81DAD96B2005883B00C8347E /* CloudKit.framework */; };
+		81ED3E69201119E000D531F6 /* FriendsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 81ED3E68201119E000D531F6 /* FriendsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -49,6 +50,7 @@
 		81DAD967200562FB00C8347E /* CloudKitManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CloudKitManager.swift; sourceTree = "<group>"; };
 		81DAD9692005883100C8347E /* NameScramble.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = NameScramble.entitlements; sourceTree = "<group>"; };
 		81DAD96B2005883B00C8347E /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
+		81ED3E68201119E000D531F6 /* FriendsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FriendsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -125,6 +127,7 @@
 				819C3C2A20058F3600C64B67 /* MainViewController.swift */,
 				819C3C342006CC7F00C64B67 /* GroupUserListViewController.swift */,
 				81CCF9802009811700269596 /* EnterGroupCodeViewController.swift */,
+				81ED3E68201119E000D531F6 /* FriendsViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -254,6 +257,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				819C3C312005999500C64B67 /* LoginViewController.swift in Sources */,
+				81ED3E69201119E000D531F6 /* FriendsViewController.swift in Sources */,
 				81DAD961200544B300C8347E /* User.swift in Sources */,
 				81CCF9812009811700269596 /* EnterGroupCodeViewController.swift in Sources */,
 				81DAD95F2005442400C8347E /* Group.swift in Sources */,

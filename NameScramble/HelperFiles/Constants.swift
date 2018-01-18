@@ -12,6 +12,7 @@ struct Constants {
     // Cells
     static let groupTypeCollectionViewCellIdentifier = "groupTypeCell"
     static let groupUsersTableViewCellIdentifier = "userCell"
+    static let friendsCellIdentifier = "firendsCell"
     
     // Segue
     static let loginViewToMainViewSegue = "toMainViewSegue"
@@ -20,6 +21,8 @@ struct Constants {
     static let startUpViewToLoginViewSegue = "toLoginSegue"
     static let startUpViewToMainViewSegue = "alreadyUserSegue"
     static let startUpViewToGroupUserListViewSegue = "alreadyInGroupSegue"
+    static let mainViewToFriendViewSegue = "toFriendViewSegue"
+    static let friendViewToGroupUserViewSegue = "friendViewToGroupUserViewSegue"
     
     // User
     static let user = "User"
