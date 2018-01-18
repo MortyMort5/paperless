@@ -22,5 +22,4 @@ class MainCollectionViewCell: UICollectionViewCell {
         guard let groupType = self.groupType else { return }
         groupTypeLabel.text = groupType.name
     }
-    
 }
